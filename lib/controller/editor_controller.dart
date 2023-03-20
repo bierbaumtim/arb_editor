@@ -124,6 +124,34 @@ class EditorController extends StateNotifier<EditorState> {
     );
   }
 
+  void removePlaceholder(int translationIndex, int placeholderIndex) {
+    state = state.map(
+      empty: (value) => value,
+      configLoading: (value) => value,
+      failure: (value) => value,
+      translationsLoading: (value) => value,
+      templateLoading: (value) => value,
+      loaded: (value) => EditorState.loaded(
+        hasUnsavedChanges: true,
+        arbConfiguration: value.arbConfiguration,
+        translationItems: value.translationItems
+            .mapIndexed(
+              (i, t) => i == translationIndex
+                  ? TranslationItem(
+                      key: t.key,
+                      description: t.description,
+                      translations: t.translations,
+                      placeholders: t.placeholders
+                          .whereIndexed((index, _) => index != placeholderIndex)
+                          .toList(),
+                    )
+                  : t,
+            )
+            .toList(),
+      ),
+    );
+  }
+
   void updateTranslation(
     int translationIndex,
     int languageIndex,

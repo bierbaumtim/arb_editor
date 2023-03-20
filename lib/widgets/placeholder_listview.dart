@@ -59,7 +59,11 @@ class PlacerholderTile extends ConsumerWidget {
         title: Text(selectedItem.placeholders[index].name),
         trailing: IconButton(
           icon: const Icon(Icons.delete_rounded),
-          onPressed: () {},
+          onPressed: () =>
+              ref.read(editorControllerProvider.notifier).removePlaceholder(
+                    ref.read(selectedTranslationItemIndexProvider),
+                    index,
+                  ),
         ),
         children: [
           _NameTile(
