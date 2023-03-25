@@ -1,6 +1,6 @@
 import 'package:path/path.dart' as path;
 
-import 'helper.dart';
+import '../common/helper.dart';
 import 'models/arb_configuration.dart';
 import 'models/translation_item.dart';
 

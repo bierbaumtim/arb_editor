@@ -1,6 +1,6 @@
-import 'package:arb_editor/models/arb_configuration.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../models/arb_configuration.dart';
 import '../models/translation_item.dart';
 
 part 'editor_state.freezed.dart';

@@ -1,4 +1,4 @@
-import 'package:arb_editor/provider.dart';
+import 'package:arb_editor/features/editor/provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 

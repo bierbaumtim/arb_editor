@@ -8,13 +8,13 @@ import 'package:path/path.dart' as path;
 import 'package:riverpod/riverpod.dart';
 import 'package:yaml/yaml.dart';
 
-import '../helper.dart';
+import '../../common/helper.dart';
 import '../models/arb_configuration.dart';
 import '../models/placeholder.dart';
 import '../models/translated.dart';
 import '../models/translation_item.dart';
-import '../option.dart';
 import '../states/editor_state.dart';
+import '../../common/option.dart';
 import '../translations_encoder.dart';
 
 class EditorController extends StateNotifier<EditorState> {

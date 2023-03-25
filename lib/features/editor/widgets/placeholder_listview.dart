@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../common/option.dart';
 import '../models/placeholder.dart';
 import '../models/translation_item.dart';
-import '../option.dart';
 import '../provider.dart';
-import 'text_popup_menu_button.dart';
+import '../../common/text_popup_menu_button.dart';
 
 class PlaceholderListView extends StatelessWidget {
   const PlaceholderListView({
