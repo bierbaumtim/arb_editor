@@ -24,11 +24,25 @@ class SearchDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final mediaQuery = MediaQuery.of(context);
     // The paddingScaleFactor is used to adjust the padding of Dialog
     // children.
-    final paddingScaleFactor = _paddingScaleFactor(
-      MediaQuery.of(context).textScaleFactor,
-    );
+    final paddingScaleFactor = _paddingScaleFactor(mediaQuery.textScaleFactor);
+
+    var constraints = _kConstraints;
+
+    if (mediaQuery.size.width * 0.7 < _kConstraints.maxWidth) {
+      constraints = constraints.copyWith(
+        minWidth: mediaQuery.size.width * 0.7,
+        maxWidth: mediaQuery.size.width * 0.7,
+      );
+    }
+
+    if (mediaQuery.size.height * 0.7 < _kConstraints.maxHeight) {
+      constraints = constraints.copyWith(
+        maxHeight: mediaQuery.size.height * 0.7,
+      );
+    }
 
     return Dialog(
       elevation: 4,
@@ -38,7 +52,7 @@ class SearchDialog extends ConsumerWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: ConstrainedBox(
-        constraints: _kConstraints,
+        constraints: constraints,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
