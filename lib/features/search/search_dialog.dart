@@ -102,6 +102,7 @@ class _TitleView extends ConsumerWidget {
           children: [
             Expanded(
               child: TextField(
+                autofocus: true,
                 controller: ref.read(searchTextControllerProvider),
                 decoration: InputDecoration(
                   hintText: 'Search',
