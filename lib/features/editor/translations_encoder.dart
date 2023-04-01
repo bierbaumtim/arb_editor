@@ -60,11 +60,17 @@ class TranslationsEncoder {
                   'format': placeholder.numberFormat!.name
                 else if (isDateTimeType && placeholder.dateTimeFormat != null)
                   'format': placeholder.dateTimeFormat!.toJsonValue(),
-                if (placeholder.decimalDigits != null)
-                  'decimalDigits': placeholder.decimalDigits!,
-                if (placeholder.symbol != null) 'symbol': placeholder.symbol!,
-                if (placeholder.customPattern != null)
-                  'customPattern': placeholder.customPattern!,
+                if (placeholder.decimalDigits != null ||
+                    placeholder.symbol != null ||
+                    placeholder.customPattern != null)
+                  'optionalParameters': {
+                    if (placeholder.decimalDigits != null)
+                      'decimalDigits': placeholder.decimalDigits!,
+                    if (placeholder.symbol != null)
+                      'symbol': placeholder.symbol!,
+                    if (placeholder.customPattern != null)
+                      'customPattern': placeholder.customPattern!,
+                  },
               };
             }
           }
