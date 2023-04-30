@@ -615,7 +615,10 @@ class EditorController extends StateNotifier<EditorState> {
       }
 
       await file.writeAsString(
-        await compute<Map<String, dynamic>, String>(jsonEncode, entry.value),
+        await compute<Map<String, dynamic>, String>(
+          prettyJsonEncode,
+          entry.value,
+        ),
       );
     }
 
@@ -632,4 +635,10 @@ class EditorController extends StateNotifier<EditorState> {
       ),
     );
   }
+}
+
+String prettyJsonEncode(Object obj) {
+  const encoder = JsonEncoder.withIndent('  ');
+
+  return encoder.convert(obj);
 }
