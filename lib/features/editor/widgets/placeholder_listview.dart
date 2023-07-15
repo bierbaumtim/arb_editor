@@ -92,26 +92,25 @@ class PlacerholderTile extends ConsumerWidget {
             const SizedBox(height: 4),
             ListTile(
               title: const Text('Format'),
-              trailing:
-                  selectedItem.placeholders[index].type.maybeWhen<Widget?>(
-                orElse: () => null,
-                double: () => _NumberFormatSelectionButton(
-                  selectedItem: selectedItem,
-                  index: index,
-                ),
-                int: () => _NumberFormatSelectionButton(
-                  selectedItem: selectedItem,
-                  index: index,
-                ),
-                number: () => _NumberFormatSelectionButton(
-                  selectedItem: selectedItem,
-                  index: index,
-                ),
-                datetime: () => _DatetimeFormatSelectionButton(
-                  selectedItem: selectedItem,
-                  index: index,
-                ),
-              ),
+              trailing: switch (selectedItem.placeholders[index].type) {
+                DoublePlaceholder() => _NumberFormatSelectionButton(
+                    selectedItem: selectedItem,
+                    index: index,
+                  ),
+                IntPlaceholder() => _NumberFormatSelectionButton(
+                    selectedItem: selectedItem,
+                    index: index,
+                  ),
+                NumberPlaceholder() => _NumberFormatSelectionButton(
+                    selectedItem: selectedItem,
+                    index: index,
+                  ),
+                DateTimePlaceholder() => _DatetimeFormatSelectionButton(
+                    selectedItem: selectedItem,
+                    index: index,
+                  ),
+                _ => null,
+              },
             ),
             if (selectedItem.placeholders[index].dateTimeFormat?.maybeWhen(
                   orElse: () => false,
@@ -491,14 +490,14 @@ class _TypeSelectionButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return TextPopupMenuButton<PlaceholderType>(
-      text: selectedItem.placeholders[index].type.when(
-        datetime: () => 'DateTime',
-        double: () => 'double',
-        int: () => 'int',
-        number: () => 'number',
-        string: () => 'String',
-        unknown: (value) => value,
-      ),
+      text: switch (selectedItem.placeholders[index].type) {
+        DateTimePlaceholder() => 'DateTime',
+        DoublePlaceholder() => 'double',
+        IntPlaceholder() => 'int',
+        NumberPlaceholder() => 'number',
+        StringPlaceholder() => 'String',
+        UnknownPlaceholder(:final value) => value,
+      },
       initialValue: selectedItem.placeholders[index].type,
       onSelected: (value) =>
           ref.read(editorControllerProvider.notifier).setPlaceholderType(
@@ -508,23 +507,23 @@ class _TypeSelectionButton extends ConsumerWidget {
               ),
       itemBuilder: (context) => [
         const PopupMenuItem(
-          value: PlaceholderType.double(),
+          value: DoublePlaceholder(),
           child: Text('double'),
         ),
         const PopupMenuItem(
-          value: PlaceholderType.int(),
+          value: IntPlaceholder(),
           child: Text('int'),
         ),
         const PopupMenuItem(
-          value: PlaceholderType.number(),
+          value: NumberPlaceholder(),
           child: Text('number'),
         ),
         const PopupMenuItem(
-          value: PlaceholderType.datetime(),
+          value: DateTimePlaceholder(),
           child: Text('DateTime'),
         ),
         const PopupMenuItem(
-          value: PlaceholderType.string(),
+          value: StringPlaceholder(),
           child: Text('String'),
         ),
       ],

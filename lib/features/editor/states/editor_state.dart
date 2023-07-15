@@ -1,37 +1,62 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 import '../models/arb_configuration.dart';
 import '../models/translation_item.dart';
 
-part 'editor_state.freezed.dart';
+sealed class EditorState {
+  const EditorState();
+}
 
-@freezed
-class EditorState with _$EditorState {
-  const factory EditorState.empty() = EditorEmpty;
+class EditorEmpty extends EditorState {
+  const EditorEmpty();
+}
 
-  const factory EditorState.configLoading({
-    required String message,
-  }) = EditorConfigLoading;
+class EditorConfigLoading extends EditorState {
+  final String message;
 
-  const factory EditorState.templateLoading({
-    required ArbConfiguration arbConfiguration,
-    required List<TranslationItem> translationItems,
-  }) = EditorTemplateLoading;
+  const EditorConfigLoading({
+    required this.message,
+  });
+}
 
-  const factory EditorState.translationsLoading({
-    required ArbConfiguration arbConfiguration,
-    required List<TranslationItem> translationItems,
-    required String message,
-  }) = EditorTranslationsLoading;
+class EditorTemplateLoading extends EditorState {
+  final ArbConfiguration arbConfiguration;
+  final List<TranslationItem> translationItems;
 
-  const factory EditorState.loaded({
-    required ArbConfiguration arbConfiguration,
-    required List<TranslationItem> translationItems,
-    @Default(false) bool hasUnsavedChanges,
-  }) = EditorLoaded;
+  const EditorTemplateLoading({
+    required this.arbConfiguration,
+    required this.translationItems,
+  });
+}
 
-  const factory EditorState.failure({
-    required String message,
-    Object? error,
-  }) = EditorFailure;
+class EditorTranslationsLoading extends EditorState {
+  final ArbConfiguration arbConfiguration;
+  final List<TranslationItem> translationItems;
+  final String message;
+
+  const EditorTranslationsLoading({
+    required this.arbConfiguration,
+    required this.translationItems,
+    required this.message,
+  });
+}
+
+class EditorLoaded extends EditorState {
+  final ArbConfiguration arbConfiguration;
+  final List<TranslationItem> translationItems;
+  final bool hasUnsavedChanges;
+
+  const EditorLoaded({
+    required this.arbConfiguration,
+    required this.translationItems,
+    this.hasUnsavedChanges = false,
+  });
+}
+
+class EditorFailure extends EditorState {
+  final String message;
+  final Object? error;
+
+  const EditorFailure({
+    required this.message,
+    this.error,
+  });
 }

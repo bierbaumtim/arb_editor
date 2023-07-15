@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../provider.dart';
+import '../states/editor_state.dart';
 
 class OpenDialog extends ConsumerWidget {
   const OpenDialog({super.key});
@@ -16,12 +17,13 @@ class OpenDialog extends ConsumerWidget {
     final selectedPath = ref.watch(selectedConfigurationFilePathProvider);
     final editorState = ref.watch(editorControllerProvider);
 
-    final editorIsLoading = editorState.maybeWhen<bool>(
-      orElse: () => false,
-      configLoading: (_) => true,
-      templateLoading: (_, __) => true,
-      translationsLoading: (_, __, ___) => true,
-    );
+    final editorIsLoading = switch (editorState) {
+      EditorConfigLoading() ||
+      EditorTemplateLoading() ||
+      EditorTranslationsLoading() =>
+        true,
+      _ => false,
+    };
 
     return ConstrainedBox(
       constraints: _kConstraints,
@@ -45,14 +47,14 @@ class OpenDialog extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  editorState.maybeWhen(
-                    configLoading: (message) => message,
-                    templateLoading: (_, __) => 'Loading template',
-                    translationsLoading: (_, __, message) => message,
-                    loaded: (_, __, ___) => 'Completed',
-                    failure: (message, _) => message,
-                    orElse: () => '',
-                  ),
+                  switch (editorState) {
+                    EditorConfigLoading(:final message) => message,
+                    EditorTemplateLoading() => 'Loading template',
+                    EditorTranslationsLoading(:final message) => message,
+                    EditorLoaded() => 'Completed',
+                    EditorFailure(:final message) => message,
+                    _ => '',
+                  },
                 ),
                 const SizedBox(width: 16),
                 FilledButton(

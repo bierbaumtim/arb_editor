@@ -18,37 +18,27 @@ import '../../common/option.dart';
 import '../translations_encoder.dart';
 
 class EditorController extends StateNotifier<EditorState> {
-  EditorController() : super(const EditorState.empty());
+  EditorController() : super(const EditorEmpty());
 
   void clear() {
-    state = const EditorState.empty();
+    state = const EditorEmpty();
   }
 
   void replaceTranslationItem(TranslationItem newItem) {
-    state = state.map(
-      empty: (value) => value,
-      configLoading: (value) => value,
-      failure: (value) => value,
-      translationsLoading: (value) => value,
-      templateLoading: (value) => value,
-      loaded: (value) => EditorState.loaded(
+    if (state case EditorLoaded value) {
+      state = EditorLoaded(
         hasUnsavedChanges: true,
         arbConfiguration: value.arbConfiguration,
         translationItems: value.translationItems
             .map((i) => i.key == newItem.key ? newItem : i)
             .toList(),
-      ),
-    );
+      );
+    }
   }
 
   void createNewTranslationItem(String name) {
-    state = state.map(
-      empty: (value) => value,
-      configLoading: (value) => value,
-      failure: (value) => value,
-      translationsLoading: (value) => value,
-      templateLoading: (value) => value,
-      loaded: (value) => EditorState.loaded(
+    if (state case EditorLoaded value) {
+      state = EditorLoaded(
         hasUnsavedChanges: true,
         arbConfiguration: value.arbConfiguration,
         translationItems: [
@@ -64,18 +54,13 @@ class EditorController extends StateNotifier<EditorState> {
                 .toList(),
           ),
         ],
-      ),
-    );
+      );
+    }
   }
 
   void addLanguage(String language) {
-    state = state.map(
-      empty: (value) => value,
-      configLoading: (value) => value,
-      failure: (value) => value,
-      translationsLoading: (value) => value,
-      templateLoading: (value) => value,
-      loaded: (value) => EditorState.loaded(
+    if (state case EditorLoaded value) {
+      state = EditorLoaded(
         hasUnsavedChanges: true,
         arbConfiguration: value.arbConfiguration,
         translationItems: value.translationItems
@@ -88,18 +73,13 @@ class EditorController extends StateNotifier<EditorState> {
                       : item,
             )
             .toList(),
-      ),
-    );
+      );
+    }
   }
 
   void addPlaceholder(int translationIndex, String placeholderName) {
-    state = state.map(
-      empty: (value) => value,
-      configLoading: (value) => value,
-      failure: (value) => value,
-      translationsLoading: (value) => value,
-      templateLoading: (value) => value,
-      loaded: (value) => EditorState.loaded(
+    if (state case EditorLoaded value) {
+      state = EditorLoaded(
         hasUnsavedChanges: true,
         arbConfiguration: value.arbConfiguration,
         translationItems: value.translationItems
@@ -113,25 +93,20 @@ class EditorController extends StateNotifier<EditorState> {
                         ...t.placeholders,
                         Placeholder(
                           name: placeholderName,
-                          type: const PlaceholderType.string(),
+                          type: const StringPlaceholder(),
                         ),
                       ],
                     )
                   : t,
             )
             .toList(),
-      ),
-    );
+      );
+    }
   }
 
   void removePlaceholder(int translationIndex, int placeholderIndex) {
-    state = state.map(
-      empty: (value) => value,
-      configLoading: (value) => value,
-      failure: (value) => value,
-      translationsLoading: (value) => value,
-      templateLoading: (value) => value,
-      loaded: (value) => EditorState.loaded(
+    if (state case EditorLoaded value) {
+      state = EditorLoaded(
         hasUnsavedChanges: true,
         arbConfiguration: value.arbConfiguration,
         translationItems: value.translationItems
@@ -148,8 +123,8 @@ class EditorController extends StateNotifier<EditorState> {
                   : t,
             )
             .toList(),
-      ),
-    );
+      );
+    }
   }
 
   void updateTranslation(
@@ -157,13 +132,8 @@ class EditorController extends StateNotifier<EditorState> {
     int languageIndex,
     String translation,
   ) {
-    state = state.map(
-      empty: (value) => value,
-      configLoading: (value) => value,
-      failure: (value) => value,
-      translationsLoading: (value) => value,
-      templateLoading: (value) => value,
-      loaded: (value) => EditorState.loaded(
+    if (state case EditorLoaded value) {
+      state = EditorLoaded(
         hasUnsavedChanges: true,
         arbConfiguration: value.arbConfiguration,
         translationItems: value.translationItems
@@ -187,18 +157,13 @@ class EditorController extends StateNotifier<EditorState> {
                   : t,
             )
             .toList(),
-      ),
-    );
+      );
+    }
   }
 
   void setTranslationDescription(int translationIndex, String description) {
-    state = state.map(
-      empty: (value) => value,
-      configLoading: (value) => value,
-      failure: (value) => value,
-      translationsLoading: (value) => value,
-      templateLoading: (value) => value,
-      loaded: (value) => EditorState.loaded(
+    if (state case EditorLoaded value) {
+      state = EditorLoaded(
         hasUnsavedChanges: true,
         arbConfiguration: value.arbConfiguration,
         translationItems: value.translationItems
@@ -213,8 +178,8 @@ class EditorController extends StateNotifier<EditorState> {
                   : t,
             )
             .toList(),
-      ),
-    );
+      );
+    }
   }
 
   void setPlaceholderName(
@@ -311,13 +276,8 @@ class EditorController extends StateNotifier<EditorState> {
     Option<String?> symbol = const None(),
     Option<int?> decimalDigits = const None(),
   }) {
-    state = state.map(
-      empty: (value) => value,
-      configLoading: (value) => value,
-      failure: (value) => value,
-      translationsLoading: (value) => value,
-      templateLoading: (value) => value,
-      loaded: (value) => EditorState.loaded(
+    if (state case EditorLoaded value) {
+      state = EditorLoaded(
         hasUnsavedChanges: true,
         arbConfiguration: value.arbConfiguration,
         translationItems: value.translationItems
@@ -350,8 +310,8 @@ class EditorController extends StateNotifier<EditorState> {
                   : t,
             )
             .toList(),
-      ),
-    );
+      );
+    }
   }
 
   Future<void> loadFiles(String configPath) async {
@@ -365,20 +325,20 @@ class EditorController extends StateNotifier<EditorState> {
     await _parseArbFiles(arbConfig);
     if (state is EditorFailure) return;
 
-    state = EditorState.loaded(
+    state = EditorLoaded(
       arbConfiguration: arbConfig,
-      translationItems: state.maybeWhen(
-        orElse: () => [],
-        loaded: (_, translationItems, __) => translationItems,
-        templateLoading: (_, translationItems) => translationItems,
-        translationsLoading: (_, translationItems, __) => translationItems,
-      ),
+      translationItems: switch (state) {
+        EditorLoaded(:final translationItems) => translationItems,
+        EditorTemplateLoading(:final translationItems) => translationItems,
+        EditorTranslationsLoading(:final translationItems) => translationItems,
+        _ => [],
+      },
     );
   }
 
   Future<ArbConfiguration?> _loadConfiguration(String configPath) async {
     try {
-      state = const EditorState.configLoading(
+      state = const EditorConfigLoading(
         message: 'Loading configuration file',
       );
 
@@ -391,7 +351,7 @@ class EditorController extends StateNotifier<EditorState> {
       final arbDirPath = parsedConfig['arb-dir'] as String?;
 
       if (templateFilePath == null || arbDirPath == null) {
-        state = const EditorState.failure(
+        state = const EditorFailure(
           message: 'Missing configuration',
         );
 
@@ -404,7 +364,7 @@ class EditorController extends StateNotifier<EditorState> {
         templateFile: templateFilePath,
       );
     } catch (e) {
-      state = EditorState.failure(
+      state = EditorFailure(
         message: 'Failed to load configuration',
         error: e,
       );
@@ -414,7 +374,7 @@ class EditorController extends StateNotifier<EditorState> {
   }
 
   Future<void> _parseTemplate(ArbConfiguration arbConfig) async {
-    state = EditorState.templateLoading(
+    state = EditorTemplateLoading(
       arbConfiguration: arbConfig,
       translationItems: [],
     );
@@ -466,26 +426,33 @@ class EditorController extends StateNotifier<EditorState> {
               .toList(),
         );
 
-        state = state.map(
-          empty: (value) => value,
-          configLoading: (value) => value,
-          failure: (value) => value,
-          loaded: (value) => EditorState.templateLoading(
-            arbConfiguration: value.arbConfiguration,
-            translationItems: [...value.translationItems, translationItem],
-          ),
-          translationsLoading: (value) => EditorState.templateLoading(
-            arbConfiguration: value.arbConfiguration,
-            translationItems: [...value.translationItems, translationItem],
-          ),
-          templateLoading: (value) => EditorState.templateLoading(
-            arbConfiguration: value.arbConfiguration,
-            translationItems: [...value.translationItems, translationItem],
-          ),
-        );
+        state = switch (state) {
+          EditorLoaded(:final arbConfiguration, :final translationItems) =>
+            EditorTemplateLoading(
+              arbConfiguration: arbConfiguration,
+              translationItems: [...translationItems, translationItem],
+            ),
+          EditorTranslationsLoading(
+            :final arbConfiguration,
+            :final translationItems
+          ) =>
+            EditorTemplateLoading(
+              arbConfiguration: arbConfiguration,
+              translationItems: [...translationItems, translationItem],
+            ),
+          EditorTemplateLoading(
+            :final arbConfiguration,
+            :final translationItems
+          ) =>
+            EditorTemplateLoading(
+              arbConfiguration: arbConfiguration,
+              translationItems: [...translationItems, translationItem],
+            ),
+          _ => state,
+        };
       }
     } catch (e) {
-      state = EditorState.failure(
+      state = EditorFailure(
         message: 'Failed to parse template',
         error: e,
       );
@@ -494,12 +461,15 @@ class EditorController extends StateNotifier<EditorState> {
 
   Future<void> _parseArbFiles(ArbConfiguration arbConfig) async {
     try {
-      if (!state.maybeWhen(
-        orElse: () => false,
-        templateLoading: (_, translationItems) => translationItems.isNotEmpty,
-      )) {
+      final translationsEmpty = switch (state) {
+        EditorTemplateLoading(:final translationItems) =>
+          translationItems.isEmpty,
+        _ => true,
+      };
+
+      if (translationsEmpty) {
         if (state is! EditorFailure) {
-          state = const EditorState.failure(
+          state = const EditorFailure(
             message: 'Unable to parse arb files due to previous error',
           );
         }
@@ -519,15 +489,16 @@ class EditorController extends StateNotifier<EditorState> {
           continue;
         }
 
-        state = EditorState.translationsLoading(
+        state = EditorTranslationsLoading(
           message: 'Loading file ${path.basename(item.path)}',
           arbConfiguration: arbConfig,
-          translationItems: state.maybeWhen(
-            orElse: () => [],
-            loaded: (_, translationItems, __) => translationItems,
-            templateLoading: (_, translationItems) => translationItems,
-            translationsLoading: (_, translationItems, __) => translationItems,
-          ),
+          translationItems: switch (state) {
+            EditorLoaded(:final translationItems) => translationItems,
+            EditorTemplateLoading(:final translationItems) => translationItems,
+            EditorTranslationsLoading(:final translationItems) =>
+              translationItems,
+            _ => [],
+          },
         );
 
         final content = await item.readAsString();
@@ -540,13 +511,8 @@ class EditorController extends StateNotifier<EditorState> {
         for (final entry in parsedContent.entries) {
           if (entry.key.startsWith('@')) continue;
 
-          state = state.map(
-            empty: (value) => value,
-            failure: (value) => value,
-            configLoading: (value) => value,
-            loaded: (value) => value,
-            templateLoading: (value) => value,
-            translationsLoading: (value) => EditorState.translationsLoading(
+          if (state case EditorTranslationsLoading value) {
+            state = EditorTranslationsLoading(
               message: value.message,
               arbConfiguration: arbConfig,
               translationItems: value.translationItems
@@ -561,13 +527,13 @@ class EditorController extends StateNotifier<EditorState> {
                         : e,
                   )
                   .toList(),
-            ),
-          );
+            );
+          }
         }
         await Future.delayed(const Duration(milliseconds: 500));
       }
     } catch (e) {
-      state = EditorState.failure(
+      state = EditorFailure(
         message: 'Failed to parse arb files',
         error: e,
       );
@@ -575,21 +541,23 @@ class EditorController extends StateNotifier<EditorState> {
   }
 
   Future<void> saveFile() async {
-    if (!state.maybeWhen(
-      orElse: () => false,
-      loaded: (_, __, hasUnsavedChanges) => hasListeners,
-    )) {
+    final hasUnsavedChanges = switch (state) {
+      EditorLoaded(:final hasUnsavedChanges) => hasUnsavedChanges,
+      _ => false,
+    };
+
+    if (!hasUnsavedChanges) {
       return;
     }
 
-    final files = state.maybeWhen(
-      orElse: () => {},
-      loaded: (arbConfiguration, translationItems, _) =>
-          TranslationsEncoder.buildFiles(
-        arbConfiguration,
-        translationItems,
-      ),
-    );
+    final files = switch (state) {
+      EditorLoaded(:final arbConfiguration, :final translationItems) =>
+        TranslationsEncoder.buildFiles(
+          arbConfiguration,
+          translationItems,
+        ),
+      _ => {},
+    };
 
     for (final entry in files.entries) {
       var file = File(entry.key);
@@ -605,18 +573,13 @@ class EditorController extends StateNotifier<EditorState> {
       );
     }
 
-    state = state.map(
-      empty: (value) => value,
-      failure: (value) => value,
-      configLoading: (value) => value,
-      templateLoading: (value) => value,
-      translationsLoading: (value) => value,
-      loaded: (value) => EditorState.loaded(
+    if (state case EditorLoaded value) {
+      state = EditorLoaded(
         arbConfiguration: value.arbConfiguration,
         translationItems: value.translationItems,
         hasUnsavedChanges: false,
-      ),
-    );
+      );
+    }
   }
 }
 

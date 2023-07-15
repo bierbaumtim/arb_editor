@@ -3,9 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../common/option.dart';
 import '../editor/models/translation_item.dart';
 import '../editor/provider.dart';
-import '../common/option.dart';
+import '../editor/states/editor_state.dart';
 import 'search_result.dart';
 
 final showSearchProvider = StateProvider<bool>(
@@ -23,14 +24,15 @@ final searchResultsProvider = Provider.autoDispose<Option<List<SearchResult>>>(
 
     if (query.isEmpty) return const None();
 
-    final items = ref
-        .watch(editorControllerProvider)
-        .maybeWhen<List<TranslationItem>>(
-          orElse: () => <TranslationItem>[],
-          loaded: (_, translationItems, __) => translationItems,
-          templateLoading: (_, translationItems) => translationItems,
-          translationsLoading: (_, translationItems, __) => translationItems,
-        )
+    final state = ref.watch(editorControllerProvider);
+    final translationItems = switch (state) {
+      EditorLoaded(:final translationItems) => translationItems,
+      EditorTemplateLoading(:final translationItems) => translationItems,
+      EditorTranslationsLoading(:final translationItems) => translationItems,
+      _ => <TranslationItem>[],
+    };
+
+    final items = translationItems
         .mapIndexed<Option<SearchResult>>(
           (index, item) =>
               item.key.contains(query) || item.description.contains(query)

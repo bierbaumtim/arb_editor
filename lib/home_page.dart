@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'features/editor/models/translation_item.dart';
-import 'features/search/provider.dart';
 import 'features/editor/provider.dart';
+import 'features/editor/states/editor_state.dart';
 import 'features/editor/widgets/new_translation_item_dialog.dart';
 import 'features/editor/widgets/open_dialog.dart';
-import 'features/search/search_dialog.dart';
 import 'features/editor/widgets/translation_item_detail_view.dart';
 import 'features/editor/widgets/translation_item_tile.dart';
+import 'features/search/provider.dart';
+import 'features/search/search_dialog.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -19,13 +19,8 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final editorState = ref.watch(editorControllerProvider);
-
-    final showConfigSelection = editorState.maybeWhen<bool>(
-      orElse: () => true,
-      loaded: (_, __, ___) => false,
-    );
-
     final showSearch = ref.watch(showSearchProvider);
+    final showConfigSelection = editorState is EditorLoaded;
 
     return Stack(
       children: [
@@ -68,17 +63,17 @@ class _HomeView extends ConsumerWidget {
     final editorState = ref.watch(editorControllerProvider);
     final selectedItemIndex = ref.watch(selectedTranslationItemIndexProvider);
 
-    final items = editorState.maybeWhen<List<TranslationItem>>(
-      orElse: () => [],
-      loaded: (_, translationItems, __) => translationItems,
-      templateLoading: (_, translationItems) => translationItems,
-      translationsLoading: (_, translationItems, __) => translationItems,
-    );
+    final items = switch (editorState) {
+      EditorLoaded(:final translationItems) => translationItems,
+      EditorTemplateLoading(:final translationItems) => translationItems,
+      EditorTranslationsLoading(:final translationItems) => translationItems,
+      _ => [],
+    };
 
-    final mustSave = editorState.maybeWhen<bool>(
-      orElse: () => false,
-      loaded: (_, __, hasUnsavedChanges) => hasUnsavedChanges,
-    );
+    final mustSave = switch (editorState) {
+      EditorLoaded(:final hasUnsavedChanges) => hasUnsavedChanges,
+      _ => false,
+    };
 
     return Scaffold(
       appBar: PreferredSize(

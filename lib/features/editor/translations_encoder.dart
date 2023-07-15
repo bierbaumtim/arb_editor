@@ -2,6 +2,7 @@ import 'package:path/path.dart' as path;
 
 import '../common/helper.dart';
 import 'models/arb_configuration.dart';
+import 'models/placeholder.dart';
 import 'models/translation_item.dart';
 
 class TranslationsEncoder {
@@ -34,28 +35,26 @@ class TranslationsEncoder {
             );
 
             for (final placeholder in item.placeholders) {
-              final isNumberType = placeholder.type.maybeWhen(
-                orElse: () => false,
-                double: () => true,
-                int: () => true,
-                number: () => true,
-              );
+              final isNumberType = switch (placeholder.type) {
+                DoublePlaceholder() ||
+                IntPlaceholder() ||
+                NumberPlaceholder() =>
+                  true,
+                _ => false,
+              };
 
-              final isDateTimeType = placeholder.type.maybeWhen(
-                orElse: () => false,
-                datetime: () => true,
-              );
+              final isDateTimeType = placeholder.type is DateTimePlaceholder;
 
               files[templateLanguage]!['@${item.key}']!['placeholders']![
                   placeholder.name] = <String, dynamic>{
-                'type': placeholder.type.when(
-                  datetime: () => 'DateTime',
-                  double: () => 'double',
-                  int: () => 'int',
-                  number: () => 'num',
-                  string: () => 'String',
-                  unknown: (value) => '',
-                ),
+                'type': switch (placeholder.type) {
+                  DateTimePlaceholder() => 'DateTime',
+                  DoublePlaceholder() => 'double',
+                  IntPlaceholder() => 'int',
+                  NumberPlaceholder() => 'num',
+                  StringPlaceholder() => 'String',
+                  UnknownPlaceholder() => '',
+                },
                 if (isNumberType && placeholder.numberFormat != null)
                   'format': placeholder.numberFormat!.name
                 else if (isDateTimeType && placeholder.dateTimeFormat != null)

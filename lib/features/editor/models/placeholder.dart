@@ -27,16 +27,11 @@ class Placeholder {
             <String, dynamic>{};
 
     final type = PlaceholderType.fromJson(json['type'] as String? ?? '');
-    final isDateTimeType = type.maybeWhen(
-      orElse: () => false,
-      datetime: () => true,
-    );
-    final isNumberType = type.maybeWhen(
-      orElse: () => false,
-      double: () => true,
-      int: () => true,
-      number: () => true,
-    );
+    final isDateTimeType = type is DateTimePlaceholder;
+    final isNumberType = switch (type) {
+      IntPlaceholder() || DoublePlaceholder() || NumberPlaceholder() => true,
+      _ => false,
+    };
 
     return Placeholder(
       name: name,
@@ -81,31 +76,45 @@ class Placeholder {
   }
 }
 
-@freezed
-class PlaceholderType with _$PlaceholderType {
-  const factory PlaceholderType.int() = _Int;
-  const factory PlaceholderType.double() = _Double;
-  const factory PlaceholderType.number() = _Number;
-  const factory PlaceholderType.datetime() = _DateTime;
-  const factory PlaceholderType.string() = _String;
-  const factory PlaceholderType.unknown(String value) = _Unknown;
+sealed class PlaceholderType {
+  const PlaceholderType();
 
   static PlaceholderType fromJson(String json) {
-    switch (json) {
-      case 'int':
-        return const PlaceholderType.int();
-      case 'double':
-        return const PlaceholderType.double();
-      case 'num':
-        return const PlaceholderType.number();
-      case 'DateTime':
-        return const PlaceholderType.datetime();
-      case 'String':
-        return const PlaceholderType.string();
-      default:
-        return PlaceholderType.unknown(json);
-    }
+    return switch (json) {
+      'int' => const IntPlaceholder(),
+      'double' => const DoublePlaceholder(),
+      'num' => const NumberPlaceholder(),
+      'DateTime' => const DateTimePlaceholder(),
+      'String' => const StringPlaceholder(),
+      _ => UnknownPlaceholder(json),
+    };
   }
+}
+
+class IntPlaceholder extends PlaceholderType {
+  const IntPlaceholder();
+}
+
+class DoublePlaceholder extends PlaceholderType {
+  const DoublePlaceholder();
+}
+
+class NumberPlaceholder extends PlaceholderType {
+  const NumberPlaceholder();
+}
+
+class DateTimePlaceholder extends PlaceholderType {
+  const DateTimePlaceholder();
+}
+
+class StringPlaceholder extends PlaceholderType {
+  const StringPlaceholder();
+}
+
+class UnknownPlaceholder extends PlaceholderType {
+  final String value;
+
+  const UnknownPlaceholder(this.value);
 }
 
 enum PlaceholderNumberFormat {

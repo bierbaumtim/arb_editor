@@ -35,12 +35,12 @@ final editorControllerProvider =
 );
 
 final translationItemsProvider = Provider<List<TranslationItem>>(
-  (ref) => ref.watch(editorControllerProvider).maybeWhen(
-        orElse: () => [],
-        loaded: (_, translationItems, __) => translationItems,
-        templateLoading: (_, translationItems) => translationItems,
-        translationsLoading: (_, translationItems, __) => translationItems,
-      ),
+  (ref) => switch (ref.watch(editorControllerProvider)) {
+    EditorLoaded(:final translationItems) => translationItems,
+    EditorTemplateLoading(:final translationItems) => translationItems,
+    EditorTranslationsLoading(:final translationItems) => translationItems,
+    _ => [],
+  },
 );
 
 final selectedTranslationItemIndexProvider = StateProvider<int>(
