@@ -23,81 +23,88 @@ class TranslationItemDetailView extends ConsumerWidget {
 
     final selectedItem = items[selectedItemIndex];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-          child: Text(
-            selectedItem.key,
-            style: theme.textTheme.titleLarge,
+    return FocusTraversalGroup(
+      policy: WidgetOrderTraversalPolicy(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+            child: Text(
+              selectedItem.key,
+              style: theme.textTheme.titleLarge,
+            ),
           ),
-        ),
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    const ListTile(
-                      title: Text('Description'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      const ListTile(
+                        title: Text('Description'),
                       ),
-                      child: TextField(
-                        controller: ref.watch(
-                          selectedTranslationItemDescriptionTextControllerProvider,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
                         ),
-                        focusNode: ref.watch(
-                          selectedTranslationItemDescriptionFocusNodeProvider,
-                        ),
-                        maxLines: 5,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Theme.of(context).dividerColor,
-                              width: 2,
+                        child: TextField(
+                          autofocus: true,
+                          controller: ref.watch(
+                            selectedTranslationItemDescriptionTextControllerProvider,
+                          ),
+                          focusNode: ref.watch(
+                            selectedTranslationItemDescriptionFocusNodeProvider,
+                          ),
+                          maxLines: 5,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).dividerColor,
+                                width: 2,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).dividerColor,
+                                width: 2,
+                              ),
                             ),
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Theme.of(context).dividerColor,
-                              width: 2,
-                            ),
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('Placeholder'),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.add_rounded),
+                          onPressed: () async => showDialog(
+                            context: context,
+                            builder: (context) => const NewPlaceholderDialog(),
                           ),
                         ),
                       ),
-                    ),
-                    ListTile(
-                      title: const Text('Placeholder'),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.add_rounded),
-                        onPressed: () async => showDialog(
-                          context: context,
-                          builder: (context) => const NewPlaceholderDialog(),
+                      Expanded(
+                        child: FocusTraversalOrder(
+                          order: const NumericFocusOrder(2),
+                          child: PlaceholderListView(
+                            selectedItem: selectedItem,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: PlaceholderListView(
-                        selectedItem: selectedItem,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: TranslationsView(
-                  selectedItem: selectedItem,
+                Expanded(
+                  child: TranslationsView(
+                    selectedItem: selectedItem,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

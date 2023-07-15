@@ -19,13 +19,16 @@ class PlaceholderListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.only(left: 8, right: 4),
-      itemBuilder: (context, index) => PlacerholderTile(
-        index: index,
-        selectedItem: selectedItem,
+    return FocusTraversalGroup(
+      policy: OrderedTraversalPolicy(),
+      child: ListView.builder(
+        padding: const EdgeInsets.only(left: 8, right: 4),
+        itemBuilder: (context, index) => PlacerholderTile(
+          index: index,
+          selectedItem: selectedItem,
+        ),
+        itemCount: selectedItem.placeholders.length,
       ),
-      itemCount: selectedItem.placeholders.length,
     );
   }
 }
@@ -45,180 +48,186 @@ class PlacerholderTile extends ConsumerWidget {
     final editingControllerContainer =
         ref.watch(selectedTranslationItemPlaceholderEditingControllerProvider);
 
-    return Card(
-      elevation: 12,
-      shadowColor: Colors.transparent,
-      clipBehavior: Clip.hardEdge,
-      child: ExpansionTile(
-        maintainState: true,
-        initiallyExpanded: index == 0,
-        controlAffinity: ListTileControlAffinity.leading,
-        collapsedShape: const Border.fromBorderSide(BorderSide.none),
-        shape: const Border.fromBorderSide(BorderSide.none),
-        backgroundColor: Colors.transparent,
-        title: Text(selectedItem.placeholders[index].name),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete_rounded),
-          onPressed: () =>
-              ref.read(editorControllerProvider.notifier).removePlaceholder(
+    return FocusTraversalOrder(
+      order: NumericFocusOrder(index + 1),
+      child: Card(
+        elevation: 12,
+        shadowColor: Colors.transparent,
+        clipBehavior: Clip.hardEdge,
+        child: ExpansionTile(
+          maintainState: true,
+          initiallyExpanded: index == 0,
+          controlAffinity: ListTileControlAffinity.leading,
+          collapsedShape: const Border.fromBorderSide(BorderSide.none),
+          shape: const Border.fromBorderSide(BorderSide.none),
+          backgroundColor: Colors.transparent,
+          title: Text(selectedItem.placeholders[index].name),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete_rounded),
+            onPressed: () =>
+                ref.read(editorControllerProvider.notifier).removePlaceholder(
+                      ref.read(selectedTranslationItemIndexProvider),
+                      index,
+                    ),
+          ),
+          children: [
+            _NameTile(
+              controller: editingControllerContainer[index].nameController,
+              onSubmitted: (value) => ref
+                  .read(editorControllerProvider.notifier)
+                  .setPlaceholderName(
                     ref.read(selectedTranslationItemIndexProvider),
                     index,
+                    value,
                   ),
-        ),
-        children: [
-          _NameTile(
-            controller: editingControllerContainer[index].nameController,
-            onSubmitted: (value) =>
-                ref.read(editorControllerProvider.notifier).setPlaceholderName(
-                      ref.read(selectedTranslationItemIndexProvider),
-                      index,
-                      value,
-                    ),
-          ),
-          const SizedBox(height: 4),
-          ListTile(
-            title: const Text('Type'),
-            trailing: _TypeSelectionButton(
-              selectedItem: selectedItem,
-              index: index,
             ),
-          ),
-          const SizedBox(height: 4),
-          ListTile(
-            title: const Text('Format'),
-            trailing: selectedItem.placeholders[index].type.maybeWhen<Widget?>(
-              orElse: () => null,
-              double: () => _NumberFormatSelectionButton(
-                selectedItem: selectedItem,
-                index: index,
-              ),
-              int: () => _NumberFormatSelectionButton(
-                selectedItem: selectedItem,
-                index: index,
-              ),
-              number: () => _NumberFormatSelectionButton(
-                selectedItem: selectedItem,
-                index: index,
-              ),
-              datetime: () => _DatetimeFormatSelectionButton(
+            const SizedBox(height: 4),
+            ListTile(
+              title: const Text('Type'),
+              trailing: _TypeSelectionButton(
                 selectedItem: selectedItem,
                 index: index,
               ),
             ),
-          ),
-          if (selectedItem.placeholders[index].dateTimeFormat?.maybeWhen(
-                orElse: () => false,
-                custom: (_) => true,
-              ) ??
-              false) ...[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
-              child: TextField(
-                controller: editingControllerContainer[index]
-                    .customDateTimeFormatController,
-                onSubmitted: (value) => ref
-                    .read(editorControllerProvider.notifier)
-                    .setPlaceholderCustomDateTimeFormat(
-                      ref.read(selectedTranslationItemIndexProvider),
-                      index,
-                      value,
+            const SizedBox(height: 4),
+            ListTile(
+              title: const Text('Format'),
+              trailing:
+                  selectedItem.placeholders[index].type.maybeWhen<Widget?>(
+                orElse: () => null,
+                double: () => _NumberFormatSelectionButton(
+                  selectedItem: selectedItem,
+                  index: index,
+                ),
+                int: () => _NumberFormatSelectionButton(
+                  selectedItem: selectedItem,
+                  index: index,
+                ),
+                number: () => _NumberFormatSelectionButton(
+                  selectedItem: selectedItem,
+                  index: index,
+                ),
+                datetime: () => _DatetimeFormatSelectionButton(
+                  selectedItem: selectedItem,
+                  index: index,
+                ),
+              ),
+            ),
+            if (selectedItem.placeholders[index].dateTimeFormat?.maybeWhen(
+                  orElse: () => false,
+                  custom: (_) => true,
+                ) ??
+                false) ...[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                child: TextField(
+                  controller: editingControllerContainer[index]
+                      .customDateTimeFormatController,
+                  onSubmitted: (value) => ref
+                      .read(editorControllerProvider.notifier)
+                      .setPlaceholderCustomDateTimeFormat(
+                        ref.read(selectedTranslationItemIndexProvider),
+                        index,
+                        value,
+                      ),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).dividerColor,
+                        width: 2,
+                      ),
                     ),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).dividerColor,
-                      width: 2,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).dividerColor,
+                        width: 2,
+                      ),
                     ),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).dividerColor,
-                      width: 2,
+                ),
+              ),
+            ],
+            const SizedBox(height: 4),
+            ListTile(
+              title: const Text('Decimal Digits'),
+              trailing: SizedBox(
+                width: 100,
+                child: TextField(
+                  controller:
+                      editingControllerContainer[index].decimalDigitsController,
+                  textAlign: TextAlign.end,
+                  onSubmitted: (value) => ref
+                      .read(editorControllerProvider.notifier)
+                      .setPlaceholderDecimalDigits(
+                        ref.read(selectedTranslationItemIndexProvider),
+                        index,
+                        value,
+                      ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).dividerColor,
+                        width: 2,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).dividerColor,
+                        width: 2,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
+            const SizedBox(height: 4),
+            ListTile(
+              title: const Text('Symbol'),
+              trailing: SizedBox(
+                width: 100,
+                child: TextField(
+                  controller:
+                      editingControllerContainer[index].symbolController,
+                  textAlign: TextAlign.end,
+                  onSubmitted: (value) => ref
+                      .read(editorControllerProvider.notifier)
+                      .setPlaceholderName(
+                        ref.read(selectedTranslationItemIndexProvider),
+                        index,
+                        value,
+                      ),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).dividerColor,
+                        width: 2,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).dividerColor,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            const ListTile(
+              title: Text('Custom Pattern'),
+              enabled: false,
+            ),
+            const SizedBox(height: 4),
           ],
-          const SizedBox(height: 4),
-          ListTile(
-            title: const Text('Decimal Digits'),
-            trailing: SizedBox(
-              width: 100,
-              child: TextField(
-                controller:
-                    editingControllerContainer[index].decimalDigitsController,
-                textAlign: TextAlign.end,
-                onSubmitted: (value) => ref
-                    .read(editorControllerProvider.notifier)
-                    .setPlaceholderDecimalDigits(
-                      ref.read(selectedTranslationItemIndexProvider),
-                      index,
-                      value,
-                    ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).dividerColor,
-                      width: 2,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).dividerColor,
-                      width: 2,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 4),
-          ListTile(
-            title: const Text('Symbol'),
-            trailing: SizedBox(
-              width: 100,
-              child: TextField(
-                controller: editingControllerContainer[index].symbolController,
-                textAlign: TextAlign.end,
-                onSubmitted: (value) => ref
-                    .read(editorControllerProvider.notifier)
-                    .setPlaceholderName(
-                      ref.read(selectedTranslationItemIndexProvider),
-                      index,
-                      value,
-                    ),
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).dividerColor,
-                      width: 2,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).dividerColor,
-                      width: 2,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 4),
-          const ListTile(
-            title: Text('Custom Pattern'),
-            enabled: false,
-          ),
-          const SizedBox(height: 4),
-        ],
+        ),
       ),
     );
   }
@@ -247,7 +256,7 @@ class _DatetimeFormatSelectionButton extends ConsumerWidget {
           .setPlaceholderDateTimeFormat(
             ref.read(selectedTranslationItemIndexProvider),
             index,
-            value.when(none: () => null, some: (v) => v),
+            value.mapOr(null, (v) => v),
           ),
       itemBuilder: (context) => [
         const PopupMenuItem(
@@ -446,10 +455,7 @@ class _NumberFormatSelectionButton extends ConsumerWidget {
           .setPlaceholderNumberFormat(
             ref.read(selectedTranslationItemIndexProvider),
             index,
-            value.when(
-              none: () => null,
-              some: (v) => v,
-            ),
+            value.mapOr(null, (v) => v),
           ),
       text: selectedItem.placeholders[index].numberFormat?.name ?? 'None',
       initialValue: Option.fromNullable(

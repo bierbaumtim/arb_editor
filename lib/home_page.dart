@@ -164,15 +164,17 @@ class _HomeView extends ConsumerWidget {
           ),
           const Expanded(
             flex: 3,
-            child: Card(
-              margin: EdgeInsets.only(left: 4, top: 4),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
+            child: FocusScope(
+              child: Card(
+                margin: EdgeInsets.only(left: 4, top: 4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                  ),
                 ),
+                elevation: 4,
+                child: TranslationItemDetailView(),
               ),
-              elevation: 4,
-              child: TranslationItemDetailView(),
             ),
           ),
         ],

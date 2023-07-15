@@ -4,6 +4,7 @@ import 'package:arb_editor/features/editor/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../common/option.dart';
 import 'provider.dart';
 
 class SearchDialog extends ConsumerWidget {
@@ -173,38 +174,34 @@ class _ContentView extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 0, 0, 8),
             child: Text(
-              results.when(
-                none: () => 'Nothing found',
-                some: (value) => 'Results: ${value.length}',
+              results.mapOr(
+                'Nothing found',
+                (value) => 'Results: ${value.length}',
               ),
               style: theme.textTheme.titleMedium,
             ),
           ),
-          ...results.when(
-            none: () => [],
-            some: (value) => [
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: value.length,
-                  itemBuilder: (context, index) => Card(
-                    elevation: 10,
-                    shadowColor: Colors.transparent,
-                    clipBehavior: Clip.hardEdge,
-                    child: ListTile(
-                      title: Text(value.elementAt(index).name),
-                      onTap: () {
-                        ref
-                            .read(selectedTranslationItemIndexProvider.notifier)
-                            .state = value.elementAt(index).index;
-                        ref.read(showSearchProvider.notifier).state = false;
-                      },
-                    ),
+          if (results case Some(:final value))
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: value.length,
+                itemBuilder: (context, index) => Card(
+                  elevation: 10,
+                  shadowColor: Colors.transparent,
+                  clipBehavior: Clip.hardEdge,
+                  child: ListTile(
+                    title: Text(value.elementAt(index).name),
+                    onTap: () {
+                      ref
+                          .read(selectedTranslationItemIndexProvider.notifier)
+                          .state = value.elementAt(index).index;
+                      ref.read(showSearchProvider.notifier).state = false;
+                    },
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
         ],
       ),
     );

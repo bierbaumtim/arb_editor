@@ -225,7 +225,7 @@ class EditorController extends StateNotifier<EditorState> {
       _updatePlaceholder(
         translationIndex: translationIndex,
         placeholderIndex: placeholderIndex,
-        name: Option.some(name),
+        name: Some(name),
       );
 
   void setPlaceholderType(
@@ -236,7 +236,7 @@ class EditorController extends StateNotifier<EditorState> {
       _updatePlaceholder(
         translationIndex: translationIndex,
         placeholderIndex: placeholderIndex,
-        type: Option.some(type),
+        type: Some(type),
       );
 
   void setPlaceholderNumberFormat(
@@ -247,7 +247,7 @@ class EditorController extends StateNotifier<EditorState> {
       _updatePlaceholder(
         translationIndex: translationIndex,
         placeholderIndex: placeholderIndex,
-        numberFormat: Option.some(numberFormat),
+        numberFormat: Some(numberFormat),
       );
 
   void setPlaceholderDateTimeFormat(
@@ -258,7 +258,7 @@ class EditorController extends StateNotifier<EditorState> {
       _updatePlaceholder(
         translationIndex: translationIndex,
         placeholderIndex: placeholderIndex,
-        dateTimeFormat: Option.some(dateTimeFormat),
+        dateTimeFormat: Some(dateTimeFormat),
       );
 
   void setPlaceholderDecimalDigits(
@@ -269,7 +269,7 @@ class EditorController extends StateNotifier<EditorState> {
       _updatePlaceholder(
         translationIndex: translationIndex,
         placeholderIndex: placeholderIndex,
-        decimalDigits: Option.some(
+        decimalDigits: Some(
           decimalDigits.isEmpty ? null : int.tryParse(decimalDigits),
         ),
       );
@@ -282,7 +282,7 @@ class EditorController extends StateNotifier<EditorState> {
       _updatePlaceholder(
         translationIndex: translationIndex,
         placeholderIndex: placeholderIndex,
-        symbol: Option.some(
+        symbol: Some(
           symbol.isEmpty ? null : symbol,
         ),
       );
@@ -295,7 +295,7 @@ class EditorController extends StateNotifier<EditorState> {
       _updatePlaceholder(
         translationIndex: translationIndex,
         placeholderIndex: placeholderIndex,
-        dateTimeFormat: Option.some(
+        dateTimeFormat: Some(
           PlaceholderDateTimeFormat.custom(customDateTimeFormat),
         ),
       );
@@ -331,34 +331,17 @@ class EditorController extends StateNotifier<EditorState> {
                           .mapIndexed(
                             (j, p) => j == placeholderIndex
                                 ? Placeholder(
-                                    name: name.when(
-                                      none: () => p.name,
-                                      some: (value) => value,
-                                    ),
-                                    type: type.when(
-                                      none: () => p.type,
-                                      some: (value) => value,
-                                    ),
-                                    customPattern: customPattern.when(
-                                      none: () => p.customPattern,
-                                      some: (value) => value,
-                                    ),
-                                    decimalDigits: decimalDigits.when(
-                                      none: () => p.decimalDigits,
-                                      some: (value) => value,
-                                    ),
-                                    numberFormat: numberFormat.when(
-                                      none: () => p.numberFormat,
-                                      some: (value) => value,
-                                    ),
-                                    dateTimeFormat: dateTimeFormat.when(
-                                      none: () => p.dateTimeFormat,
-                                      some: (value) => value,
-                                    ),
-                                    symbol: symbol.when(
-                                      none: () => p.symbol,
-                                      some: (value) => value,
-                                    ),
+                                    name: name.unwrapOr(p.name),
+                                    type: type.unwrapOr(p.type),
+                                    customPattern:
+                                        customPattern.unwrapOr(p.customPattern),
+                                    decimalDigits:
+                                        decimalDigits.unwrapOr(p.decimalDigits),
+                                    numberFormat:
+                                        numberFormat.unwrapOr(p.numberFormat),
+                                    dateTimeFormat: dateTimeFormat
+                                        .unwrapOr(p.dateTimeFormat),
+                                    symbol: symbol.unwrapOr(p.symbol),
                                   )
                                 : p,
                           )

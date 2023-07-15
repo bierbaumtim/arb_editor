@@ -21,48 +21,51 @@ class TranslationsView extends ConsumerWidget {
     final translationsEditingController =
         ref.watch(selectedTranslationItemTextControllerProvider);
 
-    return Column(
-      children: [
-        SizedBox(
-          height: 40,
-          child: Stack(
-            children: [
-              Center(
-                child: Text(
-                  'Translations',
-                  style: theme.textTheme.titleMedium,
+    return FocusTraversalGroup(
+      policy: WidgetOrderTraversalPolicy(),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 40,
+            child: Stack(
+              children: [
+                Center(
+                  child: Text(
+                    'Translations',
+                    style: theme.textTheme.titleMedium,
+                  ),
                 ),
-              ),
-              Positioned(
-                right: 20,
-                top: 0,
-                bottom: 0,
-                child: Center(
-                  child: IconButton(
-                    icon: const Icon(Icons.add_rounded),
-                    onPressed: () async => showDialog(
-                      context: context,
-                      builder: (context) =>
-                          const NewTranslationLanguageDialog(),
+                Positioned(
+                  right: 20,
+                  top: 0,
+                  bottom: 0,
+                  child: Center(
+                    child: IconButton(
+                      icon: const Icon(Icons.add_rounded),
+                      onPressed: () async => showDialog(
+                        context: context,
+                        builder: (context) =>
+                            const NewTranslationLanguageDialog(),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
-            itemBuilder: (context, index) => _TranslatedCard(
-              item: selectedItem.translations[index],
-              controller: translationsEditingController[index].controller,
-              focusNode: translationsEditingController[index].focusNode,
+              ],
             ),
-            itemCount: selectedItem.translations.length,
           ),
-        ),
-      ],
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
+              itemBuilder: (context, index) => _TranslatedCard(
+                item: selectedItem.translations[index],
+                controller: translationsEditingController[index].controller,
+                focusNode: translationsEditingController[index].focusNode,
+              ),
+              itemCount: selectedItem.translations.length,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
