@@ -20,7 +20,7 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final editorState = ref.watch(editorControllerProvider);
     final showSearch = ref.watch(showSearchProvider);
-    final showConfigSelection = editorState is EditorLoaded;
+    final showConfigSelection = editorState is! EditorLoaded;
 
     return Stack(
       children: [

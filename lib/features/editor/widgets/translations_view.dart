@@ -93,9 +93,7 @@ class _TranslatedCard extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            title: Text(
-              item.language,
-            ),
+            title: Text(item.language),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
