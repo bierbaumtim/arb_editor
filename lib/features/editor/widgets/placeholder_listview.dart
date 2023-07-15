@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/option.dart';
-import '../models/placeholder.dart';
+import '../models/placeholder/placeholder_datetime_format.dart';
+import '../models/placeholder/placeholder_number_format.dart';
+import '../models/placeholder/placeholder_type.dart';
 import '../models/translation_item.dart';
 import '../provider.dart';
 import '../../common/text_popup_menu_button.dart';
@@ -112,11 +114,8 @@ class PlacerholderTile extends ConsumerWidget {
                 _ => null,
               },
             ),
-            if (selectedItem.placeholders[index].dateTimeFormat?.maybeWhen(
-                  orElse: () => false,
-                  custom: (_) => true,
-                ) ??
-                false) ...[
+            if (selectedItem.placeholders[index].dateTimeFormat
+                case CustomPdtf()) ...[
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
                 child: TextField(
@@ -263,171 +262,171 @@ class _DatetimeFormatSelectionButton extends ConsumerWidget {
           child: Text('None'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.day()),
+          value: Some(DayPdtf()),
           child: Text('day'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.abbrWeekday()),
+          value: Some(AbbrWeekdayPdtf()),
           child: Text('abbrWeekday'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.weekday()),
+          value: Some(WeekdayPdtf()),
           child: Text('weekday'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.abbrStandaloneMonth()),
+          value: Some(AbbrStandaloneMonthPdtf()),
           child: Text('abbrStandaloneMonth'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.standaloneMonth()),
+          value: Some(StandaloneMonthPdtf()),
           child: Text('standaloneMonth'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.numMonth()),
+          value: Some(NumMonthPdtf()),
           child: Text('numMonth'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.numMonthDay()),
+          value: Some(NumMonthDayPdtf()),
           child: Text('numMonthDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.numMonthWeekdayDay()),
+          value: Some(NumMonthWeekdayDayPdtf()),
           child: Text('numMonthWeekdayDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.abbrMonth()),
+          value: Some(AbbrMonthPdtf()),
           child: Text('abbrMonth'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.abbrMonthDay()),
+          value: Some(AbbrMonthDayPdtf()),
           child: Text('abbrMonthDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.abbrMonthWeekdayDay()),
+          value: Some(AbbrMonthWeekdayDayPdtf()),
           child: Text('abbrMonthWeekdayDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.month()),
+          value: Some(MonthPdtf()),
           child: Text('month'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.monthDay()),
+          value: Some(MonthDayPdtf()),
           child: Text('monthDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.monthWeekdayDay()),
+          value: Some(MonthWeekdayDayPdtf()),
           child: Text('monthWeekdayDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.abbrQuarter()),
+          value: Some(AbbrQuarterPdtf()),
           child: Text('abbrQuarter'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.quarter()),
+          value: Some(QuarterPdtf()),
           child: Text('quarter'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.year()),
+          value: Some(YearPdtf()),
           child: Text('year'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.yearNumMonth()),
+          value: Some(YearNumMonthPdtf()),
           child: Text('yearNumMonth'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.yearNumMonthDay()),
+          value: Some(YearNumMonthDayPdtf()),
           child: Text('yearNumMonthDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.yearNumMonthWeekdayDay()),
+          value: Some(YearNumMonthWeekdayDayPdtf()),
           child: Text('yearNumMonthWeekdayDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.yearAbbrMonth()),
+          value: Some(YearAbbrMonthPdtf()),
           child: Text('yearAbbrMonth'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.yearAbbrMonthDay()),
+          value: Some(YearAbbrMonthDayPdtf()),
           child: Text('yearAbbrMonthDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.yearAbbrMonthWeekdayDay()),
+          value: Some(YearAbbrMonthWeekdayDayPdtf()),
           child: Text('yearAbbrMonthWeekdayDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.yearMonth()),
+          value: Some(YearMonthPdtf()),
           child: Text('yearMonth'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.yearMonthDay()),
+          value: Some(YearMonthDayPdtf()),
           child: Text('yearMonthDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.yearMonthWeekdayDay()),
+          value: Some(YearMonthWeekdayDayPdtf()),
           child: Text('yearMonthWeekdayDay'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.yearAbbrQuarter()),
+          value: Some(YearAbbrQuarterPdtf()),
           child: Text('yearAbbrQuarter'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.yearQuarter()),
+          value: Some(YearQuarterPdtf()),
           child: Text('yearQuarter'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.hour24()),
+          value: Some(Hour24Pdtf()),
           child: Text('hour24'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.hour24Minute()),
+          value: Some(Hour24MinutePdtf()),
           child: Text('hour24Minute'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.hour24MinuteSecond()),
+          value: Some(Hour24MinuteSecondPdtf()),
           child: Text('hour24MinuteSecond'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.hour()),
+          value: Some(HourPdtf()),
           child: Text('hour'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.hourMinute()),
+          value: Some(HourMinutePdtf()),
           child: Text('hourMinute'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.hourMinuteSecond()),
+          value: Some(HourMinuteSecondPdtf()),
           child: Text('hourMinuteSecond'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.hourMinuteGenericTz()),
+          value: Some(HourMinuteGenericTzPdtf()),
           child: Text('hourMinuteGenericTz'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.hourMinuteTz()),
+          value: Some(HourMinuteTzPdtf()),
           child: Text('hourMinuteTz'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.hourGenericTz()),
+          value: Some(HourGenericTzPdtf()),
           child: Text('hourGenericTz'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.hourTz()),
+          value: Some(HourTzPdtf()),
           child: Text('hourTz'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.minute()),
+          value: Some(MinutePdtf()),
           child: Text('minute'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.minuteSecond()),
+          value: Some(MinuteSecondPdtf()),
           child: Text('minuteSecond'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.second()),
+          value: Some(SecondPdtf()),
           child: Text('second'),
         ),
         const PopupMenuItem(
-          value: Some(PlaceholderDateTimeFormat.custom('')),
+          value: Some(CustomPdtf('')),
           child: Text('custom'),
         ),
       ],

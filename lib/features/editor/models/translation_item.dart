@@ -1,4 +1,4 @@
-import 'placeholder.dart';
+import 'placeholder/placeholder.dart';
 import 'translated.dart';
 
 class TranslationItem {

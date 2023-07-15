@@ -10,7 +10,10 @@ import 'package:yaml/yaml.dart';
 
 import '../../common/helper.dart';
 import '../models/arb_configuration.dart';
-import '../models/placeholder.dart';
+import '../models/placeholder/placeholder.dart';
+import '../models/placeholder/placeholder_datetime_format.dart';
+import '../models/placeholder/placeholder_number_format.dart';
+import '../models/placeholder/placeholder_type.dart';
 import '../models/translated.dart';
 import '../models/translation_item.dart';
 import '../states/editor_state.dart';
@@ -261,7 +264,7 @@ class EditorController extends StateNotifier<EditorState> {
         translationIndex: translationIndex,
         placeholderIndex: placeholderIndex,
         dateTimeFormat: Some(
-          PlaceholderDateTimeFormat.custom(customDateTimeFormat),
+          CustomPdtf(customDateTimeFormat),
         ),
       );
 

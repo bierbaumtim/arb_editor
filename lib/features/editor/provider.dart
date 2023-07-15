@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'controller/editor_controller.dart';
 import 'controller/open_dialog_controller.dart';
+import 'models/placeholder/placeholder_datetime_format.dart';
 import 'models/translation_item.dart';
 import 'states/editor_state.dart';
 
@@ -202,10 +203,10 @@ final selectedTranslationItemPlaceholderEditingControllerProvider =
                 text: placeholder.customPattern,
               ),
               customDateTimeFormatController: TextEditingController(
-                text: placeholder.dateTimeFormat?.maybeWhen(
-                  orElse: () => null,
-                  custom: (pattern) => pattern,
-                ),
+                text: switch (placeholder.dateTimeFormat) {
+                  CustomPdtf(:final pattern) => pattern,
+                  _ => null,
+                },
               ),
             ),
           ),

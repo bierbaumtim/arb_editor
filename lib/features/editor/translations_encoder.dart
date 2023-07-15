@@ -2,7 +2,7 @@ import 'package:path/path.dart' as path;
 
 import '../common/helper.dart';
 import 'models/arb_configuration.dart';
-import 'models/placeholder.dart';
+import 'models/placeholder/placeholder_type.dart';
 import 'models/translation_item.dart';
 
 class TranslationsEncoder {
